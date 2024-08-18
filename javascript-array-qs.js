@@ -1,153 +1,121 @@
-// Write a function that flattens a nested array. Assume that you do not know the depth of the nested arrays.
+// Write a function to find and return the maximum element in an array of numbers without using built-in methods like Math.max
 
-function flattenBruteForce(array) {
-  let flatArray = [];
-
-  array.forEach(item => {
-    if (Array.isArray(item)) {
-      flatArray = flatArray.concat(flattenBruteForce(item));
-    } else {
-      flatArray.push(item);
-    }
-  });
-
-  return flatArray;
+function findMaximum(arr) {
+  return arr.reduce((max, current) => (current > max ? current : max), arr[0]);
 }
 
-// Duplicate Zeros: For a given array, duplicate each occurrence of zero, shifting the remaining elements to the right. Note that elements beyond the length of the original array are not written. Do the above modifications to the input array in place, do not return anything from your function.
+// Write a function to reverse an array.
 
-function duplicateZeros(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === 0) {
-      // Shift all elements to the right by one
-      for (let j = arr.length - 1; j > i; j--) {
-        arr[j] = arr[j - 1];
-      }
-      // Skip the next number after a zero is duplicated
-      i++;
-    }
-  }
-}
-
-// Max Consecutive Ones: Given a binary array, write a function to compute the maximum number of consecutive 1s in the array.
-
-function findMaxConsecutiveOnesBruteForce(array) {
-  let maxConsecutive = 0;
-  let currentConsecutive = 0;
-
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === 1) {
-      currentConsecutive++;
-      maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
-    } else {
-      currentConsecutive = 0;
-    }
-  }
-
-  return maxConsecutive;
-}
-
-// Check if N and its Double Exist: Write a function that checks whether there are two distinct indices i and j in the array such that nums[i] is 2 * nums[j]. 
-
-function checkIfExist(nums) {
-  const seen = new Set();
-
-  for (const num of nums) {
-    if (seen.has(num * 2) || (num % 2 === 0 && seen.has(num / 2))) {
-      return true;
-    }
-    seen.add(num);
-  }
-  return false;
-}
-
-// Replace Elements with Greatest Element on Right Side: Write a function that replaces every element in an array with the greatest element among the elements to its right, and replace the last element with -1. 
-
-function replaceElements(arr) {
-  let max = -1;
-  for (let i = arr.length - 1; i >= 0; i--) {
-    let newMax = Math.max(arr[i], max);
-    arr[i] = max;
-    max = newMax;
+function reverseArray(arr) {
+  let start = 0;
+  let end = arr.length - 1;
+  while (start < end) {
+    let temp = arr[start];
+    arr[start] = arr[end];
+    arr[end] = temp;
+    start++;
+    end--;
   }
   return arr;
 }
 
-// Move Zeroes: Write a function to move all 0’s to the end of an array while maintaining the relative order of the non-zero elements.
+// Write a function to remove duplicate elements from an array.
 
-function moveZeroes(nums) {
-  let lastNonZeroFoundAt = 0;
+function removeDuplicates(arr) {
+  return [...new Set(arr)];
+}
 
-  // Move all the non-zero elements to the beginning of the array
-  for (let i = 0; i < nums.length; i++) {
-    if (nums[i] !== 0) {
-      nums[lastNonZeroFoundAt++] = nums[i];
-    }
-  }
+// Write a function to rotate an array k times to the right.
 
-  // Fill the rest of the array with zeros
-  for (let i = lastNonZeroFoundAt; i < nums.length; i++) {
-    nums[i] = 0;
+function rotateArrayOptimized(arr, k) {
+  k = k % arr.length; // In case the number of rotations exceeds the length of the array
+  reverse(arr, 0, arr.length - 1);
+  reverse(arr, 0, k - 1);
+  reverse(arr, k, arr.length - 1);
+  return arr;
+}
+
+function reverse(arr, start, end) {
+  while (start < end) {
+    let temp = arr[start];
+    arr[start] = arr[end];
+    arr[end] = temp;
+    start++;
+    end--;
   }
 }
 
-// Balanced Parentheses: Given an array of parentheses, write a function that checks if the array is balanced.
+// Given an array of n-1 numbers in the range from 1 to n, write a function to find the missing number.
 
-function isBalanced(parentheses) {
-  const stack = [];
+function findMissingNumber(arr, n) {
+  let expectedSum = (n * (n + 1)) / 2;
+  let actualSum = arr.reduce((sum, num) => sum + num, 0);
+  return expectedSum - actualSum;
+}
 
-  for (const char of parentheses) {
-    if (char === '(') {
-      stack.push(char);
-    } else if (char === ')') {
-      if (stack.length === 0) {
-        return false; // A closing parenthesis without a matching opening one
-      }
-      stack.pop();
+// Write a function to merge two sorted arrays into a single sorted array.
+
+function mergeSortedArrays(arr1, arr2) {
+  let mergedArray = [];
+  let i = 0,
+    j = 0;
+
+  while (i < arr1.length && j < arr2.length) {
+    if (arr1[i] < arr2[j]) {
+      mergedArray.push(arr1[i]);
+      i++;
+    } else {
+      mergedArray.push(arr2[j]);
+      j++;
     }
   }
 
-  return stack.length === 0; // True if all open parentheses have been closed
-}
-
-// Maximum Product Subarray: Find the contiguous subarray within an array (containing at least one number) which has the largest product. 
-
-function maxProductSubarray(nums) {
-  let maxProduct = nums[0];
-  let minProduct = nums[0];
-  let result = maxProduct;
-
-  for (let i = 1; i < nums.length; i++) {
-    let choices = [nums[i], nums[i] * maxProduct, nums[i] * minProduct];
-    maxProduct = Math.max(...choices);
-    minProduct = Math.min(...choices);
-    result = Math.max(maxProduct, result);
+  // If there are remaining elements in arr1 or arr2, add them to mergedArray
+  while (i < arr1.length) {
+    mergedArray.push(arr1[i]);
+    i++;
+  }
+  while (j < arr2.length) {
+    mergedArray.push(arr2[j]);
+    j++;
   }
 
-  return result;
+  return mergedArray;
 }
 
-// Longest Consecutive Sequence: Write a function that finds the length of the longest consecutive elements sequence from an unsorted array of integers.
+// Write a function that takes a nested array and returns a flattened version of the array.
 
-function longestConsecutiveBruteForce(nums) {
-  if (nums.length === 0) {
-    return 0;
-  }
-
-  nums.sort((a, b) => a - b);
-  let longestStreak = 1;
-  let currentStreak = 1;
-
-  for (let i = 1; i < nums.length; i++) {
-    if (nums[i] !== nums[i - 1]) {
-      if (nums[i] === nums[i - 1] + 1) {
-        currentStreak += 1;
-      } else {
-        longestStreak = Math.max(longestStreak, currentStreak);
-        currentStreak = 1;
-      }
+function flattenArrayBruteForce(arr) {
+  let flatArray = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (Array.isArray(arr[i])) {
+      flatArray = flatArray.concat(flattenArrayBruteForce(arr[i]));
+    } else {
+      flatArray.push(arr[i]);
     }
   }
+  return flatArray;
+}
 
-  return Math.max(longestStreak, currentStreak);
+// Write a function that takes an array of numbers and a target sum, and returns indices of the two numbers that add up to the target.
+
+function twoSum(arr, target) {
+  let numIndices = new Map();
+  for (let i = 0; i < arr.length; i++) {
+    let complement = target - arr[i];
+    if (numIndices.has(complement)) {
+      return [numIndices.get(complement), i];
+    }
+    numIndices.set(arr[i], i);
+  }
+}
+
+// Maximum product of three numbers in an array
+
+function maxProductOfThree(arr) {
+  arr.sort((a, b) => a - b);
+  let n = arr.length;
+  let product1 = arr[0] * arr[1] * arr[n - 1]; // Product of two smallest and one largest
+  let product2 = arr[n - 1] * arr[n - 2] * arr[n - 3]; // Product of three largest
+  return Math.max(product1, product2);
 }
