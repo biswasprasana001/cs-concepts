@@ -1,121 +1,84 @@
-// Write a function to find and return the maximum element in an array of numbers without using built-in methods like Math.max
+// reverse an array without using the built-in reverse() method
 
-function findMaximum(arr) {
-  return arr.reduce((max, current) => (current > max ? current : max), arr[0]);
-}
-
-// Write a function to reverse an array.
-
-function reverseArray(arr) {
-  let start = 0;
-  let end = arr.length - 1;
-  while (start < end) {
-    let temp = arr[start];
-    arr[start] = arr[end];
-    arr[end] = temp;
-    start++;
-    end--;
+function reverseArrayOptimized(arr) {
+  let left = 0;
+  let right = arr.length - 1;
+  while (left < right) {
+      // Swap elements using destructuring assignment
+      [arr[left], arr[right]] = [arr[right], arr[left]];
+      // Move towards the middle
+      left++;
+      right--;
   }
   return arr;
 }
 
-// Write a function to remove duplicate elements from an array.
+// Example usage:
+let originalArray3 = [1, 2, 3, 4, 5];
+let reversedArray3 = reverseArrayOptimized(originalArray3);
+console.log(reversedArray3); // Output: [5, 4, 3, 2, 1]
 
-function removeDuplicates(arr) {
-  return [...new Set(arr)];
-}
 
-// Write a function to rotate an array k times to the right.
+// remove duplicate values from an array
 
-function rotateArrayOptimized(arr, k) {
-  k = k % arr.length; // In case the number of rotations exceeds the length of the array
-  reverse(arr, 0, arr.length - 1);
-  reverse(arr, 0, k - 1);
-  reverse(arr, k, arr.length - 1);
-  return arr;
-}
-
-function reverse(arr, start, end) {
-  while (start < end) {
-    let temp = arr[start];
-    arr[start] = arr[end];
-    arr[end] = temp;
-    start++;
-    end--;
-  }
-}
-
-// Given an array of n-1 numbers in the range from 1 to n, write a function to find the missing number.
-
-function findMissingNumber(arr, n) {
-  let expectedSum = (n * (n + 1)) / 2;
-  let actualSum = arr.reduce((sum, num) => sum + num, 0);
-  return expectedSum - actualSum;
-}
-
-// Write a function to merge two sorted arrays into a single sorted array.
-
-function mergeSortedArrays(arr1, arr2) {
-  let mergedArray = [];
-  let i = 0,
-    j = 0;
-
-  while (i < arr1.length && j < arr2.length) {
-    if (arr1[i] < arr2[j]) {
-      mergedArray.push(arr1[i]);
-      i++;
-    } else {
-      mergedArray.push(arr2[j]);
-      j++;
-    }
-  }
-
-  // If there are remaining elements in arr1 or arr2, add them to mergedArray
-  while (i < arr1.length) {
-    mergedArray.push(arr1[i]);
-    i++;
-  }
-  while (j < arr2.length) {
-    mergedArray.push(arr2[j]);
-    j++;
-  }
-
-  return mergedArray;
-}
-
-// Write a function that takes a nested array and returns a flattened version of the array.
-
-function flattenArrayBruteForce(arr) {
-  let flatArray = [];
+function removeDuplicatesUsingObject(arr) {
+  let uniqueArray = [];
+  let seen = {};
   for (let i = 0; i < arr.length; i++) {
-    if (Array.isArray(arr[i])) {
-      flatArray = flatArray.concat(flattenArrayBruteForce(arr[i]));
-    } else {
-      flatArray.push(arr[i]);
-    }
+      if (!seen[arr[i]]) {
+          uniqueArray.push(arr[i]);
+          seen[arr[i]] = true;
+      }
   }
-  return flatArray;
+  return uniqueArray;
 }
 
-// Write a function that takes an array of numbers and a target sum, and returns indices of the two numbers that add up to the target.
+// Example usage:
+let originalArray2 = [1, 2, 2, 3, 4, 4, 5];
+let uniqueArray2 = removeDuplicatesUsingObject(originalArray2);
+console.log(uniqueArray2); // Output: [1, 2, 3, 4, 5]
 
-function twoSum(arr, target) {
-  let numIndices = new Map();
-  for (let i = 0; i < arr.length; i++) {
-    let complement = target - arr[i];
-    if (numIndices.has(complement)) {
-      return [numIndices.get(complement), i];
-    }
-    numIndices.set(arr[i], i);
+// maximum and minimum values in an array
+
+function findMaxMinSinglePass(arr) {
+  let max = arr[0];
+  let min = arr[0];
+  
+  for (let i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+          max = arr[i];
+      }
+      if (arr[i] < min) {
+          min = arr[i];
+      }
   }
+  
+  return { max, min };
 }
 
-// Maximum product of three numbers in an array
+// Example usage:
+let originalArray2 = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
+let result2 = findMaxMinSinglePass(originalArray2);
+console.log(result2); // Output: { max: 9, min: 1 }
 
-function maxProductOfThree(arr) {
-  arr.sort((a, b) => a - b);
-  let n = arr.length;
-  let product1 = arr[0] * arr[1] * arr[n - 1]; // Product of two smallest and one largest
-  let product2 = arr[n - 1] * arr[n - 2] * arr[n - 3]; // Product of three largest
-  return Math.max(product1, product2);
+// sum of all elements in an array
+
+const sumArrayOptimized = arr => arr.reduce((acc, val) => acc + val, 0);
+
+// Example usage:
+let originalArray3 = [1, 2, 3, 4, 5];
+let sum3 = sumArrayOptimized(originalArray3);
+console.log(sum3); // Output: 15
+
+// rotate an array to the right by a given number of positions
+
+function rotateArrayOptimized(arr, positions) {
+  let length = arr.length;
+  positions = positions % length; // Handle cases where positions > length
+  return arr.slice(-positions).concat(arr.slice(0, -positions));
 }
+
+// Example usage:
+let originalArray3 = [1, 2, 3, 4, 5];
+let rotatedArray3 = rotateArrayOptimized(originalArray3, 2);
+console.log(rotatedArray3); // Output: [4, 5, 1, 2, 3]
